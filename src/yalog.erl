@@ -30,6 +30,34 @@
 
 -compile(export_all).
 
+info(Module, Format) -> info(Module, Format, []).
+
+info(Module, Format, Args) ->
+    log(info, Module, Format, Args).
+
+warning(Module, Format) -> warning(Module, Format, []).
+
+warning(Module, Format, Args) ->
+    log(warning, Module, Format, Args).
+
+error(Module, Format) -> error(Module, Format, []).
+
+error(Module, Format, Args) ->
+    log(error, Module, Format, Args).
+
+debug(Module, Line, Format) -> debug(Module, Line, Format, []).
+
+debug(Module, Line, Format, Args) ->
+    log(debug, Module, Line, Format, Args).
+
+log(Type, Module, Format, Args) ->
+    log(Type, Module, none, Format, Args).
+
+log(Type, Module, Line, Format, Args) ->
+    io:format(format_entry(Type, just_now(), Module, Line, Format, Args)).
+
+just_now() -> calendar:now_to_universal_time(now()).
+
 format_entry(Type, Time, Module, Line, Format, Args)
   when is_list(Args) ->
     [format_type(Type), " [", format_date(Time), " ",
@@ -48,4 +76,3 @@ format_source(Module, Line) -> [atom_to_list(Module) | format_line(Line)].
 
 format_line(none) -> [];
 format_line(Line) -> io_lib:format(":~p", [Line]).
-
