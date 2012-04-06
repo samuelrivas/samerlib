@@ -28,7 +28,8 @@
 
 -module(yalog).
 
--compile(export_all).
+-export([info/2, info/3, warning/2, warning/3, error/2, error/3, debug/3,
+         debug/4]).
 
 info(Module, Format) -> info(Module, Format, []).
 
