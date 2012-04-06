@@ -28,8 +28,22 @@
 
 -module(yalog).
 
+-include_lib("samerlib/include/yalog.hrl").
+
 -export([info/2, info/3, warning/2, warning/3, error/2, error/3, debug/3,
          debug/4]).
+
+-export([test/0]).
+
+test() ->
+    ?INF("Test"),
+    ?INF("Test ~s", ["with arguments"]),
+    ?WAR("Test"),
+    ?WAR("Test ~s", ["with arguments"]),
+    ?ERR("Test"),
+    ?ERR("Test ~s", ["with arguments"]),
+    ?DBG("Test"),
+    ?DBG("Test ~s", ["with arguments"]).
 
 info(Module, Format) -> info(Module, Format, []).
 
