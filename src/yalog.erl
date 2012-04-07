@@ -35,6 +35,9 @@
 
 -export([test/0]).
 
+-type entry_type() :: info|warning|error|debug.
+
+-spec test() -> ok.
 test() ->
     ?INF("Test"),
     ?INF("Test ~s", ["with arguments"]),
@@ -45,29 +48,39 @@ test() ->
     ?DBG("Test"),
     ?DBG("Test ~s", ["with arguments"]).
 
+-spec info(atom(), string()) -> ok.
 info(Module, Format) -> info(Module, Format, []).
 
+-spec info(atom(), string(), [term()]) -> ok.
 info(Module, Format, Args) ->
     log(info, Module, Format, Args).
 
+-spec warning(atom(), string()) -> ok.
 warning(Module, Format) -> warning(Module, Format, []).
 
+-spec warning(atom(), string(), [term()]) -> ok.
 warning(Module, Format, Args) ->
     log(warning, Module, Format, Args).
 
+-spec error(atom(), string()) -> ok.
 error(Module, Format) -> error(Module, Format, []).
 
+-spec error(atom(), string(), [term()]) -> ok.
 error(Module, Format, Args) ->
     log(error, Module, Format, Args).
 
+-spec debug(atom(), pos_integer(), string()) -> ok.
 debug(Module, Line, Format) -> debug(Module, Line, Format, []).
 
+-spec debug(atom(), pos_integer(), string(), [term()]) -> ok.
 debug(Module, Line, Format, Args) ->
     log(debug, Module, Line, Format, Args).
 
+-spec log(entry_type(), atom(), string(), [term()]) -> ok.
 log(Type, Module, Format, Args) ->
     log(Type, Module, none, Format, Args).
 
+-spec log(entry_type(), atom(), pos_integer()|none, string(), [term()]) -> ok.
 log(Type, Module, Line, Format, Args) ->
     io:format(format_entry(Type, just_now(), Module, Line, Format, Args)).
 
