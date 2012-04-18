@@ -30,6 +30,13 @@
 
 -export([untuple/1]).
 
+%% @doc turns a tagged value intro an actual value or a throw.
+%%
+%% This function can be used to wrap others that return tagged values
+%% (i.e. `{ok, Something}' or `{error, Reason}' to actually return `Something'
+%% or throw `Reason'
+%%
+%% Any other value is returned as is.
 untuple({error, Reason}) -> throw(Reason);
 untuple({ok, Value}) -> Value;
 untuple(Value) -> Value.
