@@ -26,9 +26,12 @@
 
 -module(sel_test).
 
--export([test_in_dir/1]).
+-export([test_in_dir/1, test_in_dir/2]).
 
-%% @doc creates clean directories to run tests that require actual files
+%% See the documentation
+-deprecated({test_in_dir, 2}).
+
+%% @doc creates clean directories to run tests that require actual files.
 %%
 %% This function creates an empty directory in /tmp, runs `Fun' with that
 %% directory as argument, and deletes the directory and all its contents
@@ -37,11 +40,25 @@
 %% (but still deleting the directory)
 -spec test_in_dir(fun((string()) -> any())) -> any().
 test_in_dir(Fun) ->
+    test_in_dir(true, Fun).
+
+%% @doc behaves as {@link test_in_dir/1}, cleaning up only if `Cleanup' is true.
+%%
+%% This function is intended only for debugging, don't use it in production
+%% code. Ideally, code using it should never be committed to a public directory
+%%
+%% @deprecated use it only for dirty local debugging, for committed code use
+%% {@link test_in_dir/1}
+-spec test_in_dir(boolean(), fun((string()) -> any())) -> any().
+test_in_dir(Cleanup, Fun) ->
     Dir = create_rand_dir(),
     Res = try Fun(Dir)
-          after sel_file:delete_recursive(Dir)
+          after delete_if(Cleanup, Dir)
           end,
     Res.
+
+delete_if(true, Dir) -> sel_file:delete_recursive(Dir);
+delete_if(false, _) -> ok.
 
 %% XXX Note we don't care much about seeding the psudorandom generator. This
 %% must work with any pseudorandom sequence. Also, not seeding it eases testing,
