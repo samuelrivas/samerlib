@@ -47,12 +47,29 @@ test_in_dir(Fun) ->
 %% must work with any pseudorandom sequence. Also, not seeding it eases testing,
 %% as we can easily repeat any possible failing sequence (not likely, though)
 create_rand_dir() ->
-    FileName = "sel_test_temp-" ++ [random_letter() || _ <- lists:seq(1, 10)],
-    Path = filename:join(base_test_dir(), FileName),
-    sel_file:make_dir(Path),
-    Path.
+    create_rand_dir(max_dir_attemps()).
+
+create_rand_dir(0) ->
+    %% Something fishy is happening with the tests. Dirs should've been cleaned
+    %% up and seems they are flooding the tmp dir.
+    throw(cannot_generate_dir);
+
+create_rand_dir(N) ->
+    try
+        FileName = random_dir_name(),
+        Path = filename:join(base_test_dir(), FileName),
+        sel_file:make_dir(Path),
+        Path
+    catch
+        eexist -> create_rand_dir(N-1)
+    end.
+
+random_dir_name() ->
+    "sel_test_temp-" ++ [random_letter() || _ <- lists:seq(1, 10)].
 
 random_letter() ->
     random:uniform($z - $a) + $a - 1.
 
 base_test_dir() -> "/tmp".
+
+max_dir_attemps() -> 10.
