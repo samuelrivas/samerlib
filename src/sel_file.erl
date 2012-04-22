@@ -26,7 +26,7 @@
 
 -module(sel_file).
 
--export([delete_recursive/1, make_dir/1]).
+-export([delete_recursive/1, make_dir/1, write_file/2]).
 
 %% XXX This function is a temporary hack, will be reimplemented in a sane(r) way
 %% soon (story 28185287 in learnerl project)
@@ -41,3 +41,9 @@ delete_recursive(Dir) ->
 %% @see crashfy:untuple/1
 -spec make_dir(string()) -> ok.
 make_dir(Dir) -> crashfy:untuple(file:make_dir(Dir)).
+
+%% @doc a crashfied version of file:write_file/1
+%%
+%% @see crashfy:untuple/1
+-spec write_file(string(), iolist()) -> ok.
+write_file(File, Data) -> crashfy:untuple(file:write_file(File, Data)).
