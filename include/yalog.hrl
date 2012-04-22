@@ -22,6 +22,16 @@
 %%% (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 %%% THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+-ifdef(NOLOGS).
+-define(INF(Format), ok).
+-define(INF(Format, Args), ok).
+-define(WAR(Format), ok).
+-define(WAR(Format, Args), ok).
+-define(ERR(Format), ok).
+-define(ERR(Format, Args), ok).
+-define(DBG(Format), ok).
+-define(DBG(Format, Args), ok).
+-else.
 -define(INF(Format), yalog:info(?MODULE, Format)).
 -define(INF(Format, Args), yalog:info(?MODULE, Format, Args)).
 -define(WAR(Format), yalog:warning(?MODULE, Format)).
@@ -30,3 +40,4 @@
 -define(ERR(Format, Args), yalog:error(?MODULE, Format, Args)).
 -define(DBG(Format), yalog:debug(?MODULE, ?LINE, Format)).
 -define(DBG(Format, Args), yalog:debug(?MODULE, ?LINE, Format, Args)).
+-endif.
