@@ -33,12 +33,14 @@
 %% This function creates an empty directory in /tmp, runs `Fun' with that
 %% directory as argument, and deletes the directory and all its contents
 %%
-%% Returns the value returned by `Fun'
+%% Returns the value returned by `Fun', letting any exception raised through
+%% (but still deleting the directory)
 -spec test_in_dir(fun((string()) -> any())) -> any().
 test_in_dir(Fun) ->
     Dir = create_rand_dir(),
-    Res = Fun(Dir),
-    sel_file:delete_recursive(Dir),
+    Res = try Fun(Dir)
+          after sel_file:delete_recursive(Dir)
+          end,
     Res.
 
 %% XXX Note we don't care much about seeding the psudorandom generator. This
