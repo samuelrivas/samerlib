@@ -28,7 +28,7 @@
 
 -module(sel_async_queue).
 
--export([new/0, push/2]).
+-export([new/0, push/2, pop/1]).
 
 -opaque async_queue() :: pid().
 
@@ -41,3 +41,10 @@ new() -> unimplemented.
 %% @doc adds a new element to a queue
 -spec push(async_queue(), any()) -> ok.
 push(_Q, _Element) -> ok.
+
+%% @doc gets the oldest element from the queue
+%%
+%% If the queue is empty this function blocks if the queue is empty. In that
+%% case it will return the next element pushed into it.
+-spec pop(async_queue()) -> any().
+pop(_Q) -> 1.
