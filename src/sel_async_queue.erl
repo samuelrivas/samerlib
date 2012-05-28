@@ -28,23 +28,80 @@
 
 -module(sel_async_queue).
 
+-behaviour(gen_server).
+
+%% API
 -export([new/0, push/2, pop/1]).
+
+%% gen_server callbacks
+-export([init/1, handle_call/3, handle_cast/2, handle_info/2,
+         terminate/2, code_change/3]).
 
 -opaque async_queue() :: pid().
 
 -export_type([async_queue/0]).
 
+-record(state, {queue :: queue()}).
+
+%%%-------------------------------------------------------------------
+%%% API
+%%%-------------------------------------------------------------------
+
 %% @doc returns an empty queue
 -spec new() -> async_queue().
-new() -> unimplemented.
+new() ->
+    crashfy:untuple(gen_server:start_link(?MODULE, none, [])).
 
 %% @doc adds a new element to a queue
 -spec push(async_queue(), any()) -> ok.
-push(_Q, _Element) -> ok.
+push(Q, Item) -> sel_gen_server:call(Q, {push, Item}).
 
 %% @doc gets the oldest element from the queue
 %%
 %% If the queue is empty this function blocks if the queue is empty. In that
 %% case it will return the next element pushed into it.
 -spec pop(async_queue()) -> any().
-pop(_Q) -> 1.
+pop(Q) -> sel_gen_server:call(Q, pop, infinity).
+
+%%%-------------------------------------------------------------------
+%%% gen_server callbacks
+%%%-------------------------------------------------------------------
+
+%% @private
+init(none) ->
+    {ok, #state{queue = queue:new()}}.
+
+%% @private
+handle_call({push, Item}, _From, State = #state{queue = Queue}) ->
+    {reply, ok, State#state{queue = queue:in(Item, Queue)}};
+handle_call(pop, _From, State = #state{queue = Queue}) ->
+    case queue:is_empty(Queue) of
+        true ->
+            %% FIXME just go get going, suspend the client for now
+            {noreply, State};
+        false ->
+            {{value, Item}, NewQueue} = queue:out(Queue),
+            {reply, Item, State#state{queue = NewQueue}}
+    end;
+handle_call(Request, _From, State) ->
+    {reply, {error, {bad_call, Request}}, State}.
+
+%% @private
+handle_cast(_Msg, State) ->
+    {noreply, State}.
+
+%% @private
+handle_info(_Info, State) ->
+    {noreply, State}.
+
+%% @private
+terminate(_Reason, _State) ->
+    ok.
+
+%% @private
+code_change(_OldVsn, State, _Extra) ->
+    {ok, State}.
+
+%%%-------------------------------------------------------------------
+%%% Internal functions
+%%%-------------------------------------------------------------------
