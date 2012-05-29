@@ -41,7 +41,8 @@
 
 -export_type([async_queue/0]).
 
--record(state, {queue :: queue()}).
+-record(state, {queue :: queue(),
+                susps :: queue()}). % Suspended calls to pop are here
 
 %%%-------------------------------------------------------------------
 %%% API
@@ -69,16 +70,15 @@ pop(Q) -> sel_gen_server:call(Q, pop, infinity).
 
 %% @private
 init(none) ->
-    {ok, #state{queue = queue:new()}}.
+    {ok, #state{queue = queue:new(), susps = queue:new()}}.
 
 %% @private
 handle_call({push, Item}, _From, State = #state{queue = Queue}) ->
     {reply, ok, State#state{queue = queue:in(Item, Queue)}};
-handle_call(pop, _From, State = #state{queue = Queue}) ->
+handle_call(pop, From, State = #state{queue = Queue, susps = Susps}) ->
     case queue:is_empty(Queue) of
         true ->
-            %% FIXME just go get going, suspend the client for now
-            {noreply, State};
+            {noreply, State#state{susps = queue:in(From, Susps)}};
         false ->
             {{value, Item}, NewQueue} = queue:out(Queue),
             {reply, Item, State#state{queue = NewQueue}}
