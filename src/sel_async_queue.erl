@@ -73,8 +73,16 @@ init(none) ->
     {ok, #state{queue = queue:new(), susps = queue:new()}}.
 
 %% @private
-handle_call({push, Item}, _From, State = #state{queue = Queue}) ->
-    {reply, ok, State#state{queue = queue:in(Item, Queue)}};
+handle_call(
+  {push, Item}, _From, State = #state{queue = Queue, susps = Susps}) ->
+    case queue:is_empty(Susps) of
+        true ->
+            {reply, ok, State#state{queue = queue:in(Item, Queue)}};
+        false ->
+            {{value, Susp}, NewSusps} = queue:out(Susps),
+            gen_server:reply(Susp, Item),
+            {reply, ok, State#state{susps = NewSusps}}
+    end;
 handle_call(pop, From, State = #state{queue = Queue, susps = Susps}) ->
     case queue:is_empty(Queue) of
         true ->
