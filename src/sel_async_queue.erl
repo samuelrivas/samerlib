@@ -100,7 +100,7 @@ handle_call(pop, From, State = #state{queue = Queue, susps = Susps}) ->
             {reply, Item, State#state{queue = NewQueue}}
     end;
 handle_call(stop, _From, State) ->
-    {stop, ok, normal, State};
+    {stop, normal, ok, State};
 handle_call(Request, _From, State) ->
     {reply, {error, {bad_call, Request}}, State}.
 
