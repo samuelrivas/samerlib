@@ -59,8 +59,8 @@ push(Q, Item) -> sel_gen_server:call(Q, {push, Item}).
 
 %% @doc gets the oldest element from the queue
 %%
-%% If the queue is empty this function blocks if the queue is empty. In that
-%% case it will return the next element pushed into it.
+%% This function blocks if the queue is empty until a new element is pushed into
+%% the queue. At that moment, that element will be returned.
 -spec pop(async_queue()) -> any().
 pop(Q) -> sel_gen_server:call(Q, pop, infinity).
 
