@@ -31,7 +31,7 @@
 -behaviour(gen_server).
 
 %% API
--export([new/0, push/2, pop/1]).
+-export([new/0, push/2, pop/1, destroy/1]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -64,6 +64,14 @@ push(Q, Item) -> sel_gen_server:call(Q, {push, Item}).
 -spec pop(async_queue()) -> any().
 pop(Q) -> sel_gen_server:call(Q, pop, infinity).
 
+%% @doc stops the process that holds the resources for `Q'
+%%
+%% In the current implementation, this call will not release processes waiting
+%% for the results of a {@link pop/1}. This behaviour is subject to change in
+%% the future if there is a need for it
+-spec destroy(async_queue()) -> ok.
+destroy(Q) -> sel_gen_server:call(Q, stop).
+
 %%%-------------------------------------------------------------------
 %%% gen_server callbacks
 %%%-------------------------------------------------------------------
@@ -91,6 +99,8 @@ handle_call(pop, From, State = #state{queue = Queue, susps = Susps}) ->
             {{value, Item}, NewQueue} = queue:out(Queue),
             {reply, Item, State#state{queue = NewQueue}}
     end;
+handle_call(stop, _From, State) ->
+    {stop, ok, normal, State};
 handle_call(Request, _From, State) ->
     {reply, {error, {bad_call, Request}}, State}.
 
