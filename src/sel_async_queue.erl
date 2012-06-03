@@ -48,23 +48,23 @@
 %%% API
 %%%-------------------------------------------------------------------
 
-%% @doc returns an empty queue
+%% @doc Returns an empty queue
 -spec new() -> async_queue().
 new() ->
     crashfy:untuple(gen_server:start_link(?MODULE, none, [])).
 
-%% @doc adds a new element to a queue
+%% @doc Adds a new element to the queue
 -spec push(async_queue(), any()) -> ok.
 push(Q, Item) -> sel_gen_server:call(Q, {push, Item}).
 
-%% @doc gets the oldest element from the queue
+%% @doc Removes the oldest element from the queue and returns it
 %%
 %% This function blocks if the queue is empty until a new element is pushed into
-%% the queue. At that moment, that element will be returned.
+%% it. At that moment, that element will be returned.
 -spec pop(async_queue()) -> any().
 pop(Q) -> sel_gen_server:call(Q, pop, infinity).
 
-%% @doc stops the process that holds the resources for `Q'
+%% @doc Stops the process that holds the resources for the queue
 %%
 %% In the current implementation, this call will not release processes waiting
 %% for the results of a {@link pop/1}. This behaviour is subject to change in
