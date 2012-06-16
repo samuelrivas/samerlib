@@ -39,7 +39,9 @@
 
 -opaque async_queue() :: pid().
 
--export_type([async_queue/0]).
+-type invalid_queue_error() :: {invalid_queue, async_queue()}.
+
+-export_type([async_queue/0, invalid_queue_error/0]).
 
 -record(state, {queue :: queue(),
                 susps :: queue()}). % Suspended calls to pop are here
@@ -69,8 +71,15 @@ pop(Q) -> sel_gen_server:call(Q, pop, infinity).
 %% In the current implementation, this call will not release processes waiting
 %% for the results of a {@link pop/1}. This behaviour is subject to change in
 %% the future if there is a need for it
+%%
+%% @throws bad_queue_error()
 -spec destroy(async_queue()) -> ok.
-destroy(Q) -> sel_gen_server:call(Q, stop).
+destroy(Q) ->
+    try
+        sel_gen_server:call(Q, stop)
+    catch
+        exit:{noproc, _} -> throw_invalid_queue(Q)
+    end.
 
 %%%-------------------------------------------------------------------
 %%% gen_server callbacks
@@ -123,3 +132,4 @@ code_change(_OldVsn, State, _Extra) ->
 %%%-------------------------------------------------------------------
 %%% Internal functions
 %%%-------------------------------------------------------------------
+throw_invalid_queue(Q) -> throw({invalid_queue, Q}).
