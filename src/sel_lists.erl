@@ -30,9 +30,9 @@
 
 -module(sel_lists).
 
--export([keysearch/2]).
+-export([keysearch/2, cut_and_zip/2]).
 
-%% @doc return the first tuple which `Key' as first element in the list
+%% @doc Return the first tuple which `Key' as first element in the list
 %%
 %% @throws {not_found, any()}
 -spec keysearch(any(), [tuple()]) -> any().
@@ -41,3 +41,17 @@ keysearch(Key, L) ->
         {value, Tuple} -> Tuple;
         false -> throw({not_found, Key})
     end.
+
+%% @doc Like `lists:zip/2', but works with lists of different lengths
+%%
+%% When used with lists of different lengths, the last elements of the longest
+%% list are discarded to make both lists of the same length
+-spec cut_and_zip(List1, List2) -> List3 when
+      List1 :: [A],
+      List2 :: [B],
+      List3 :: [{A, B}],
+      A :: term(),
+      B :: term().
+cut_and_zip([], _L2) -> [];
+cut_and_zip(_L1, []) -> [];
+cut_and_zip([H1|T1], [H2|T2]) -> [{H1, H2} | cut_and_zip(T1, T2)].
