@@ -41,7 +41,7 @@ wait_exit(Pid) ->
 %% milliseconds.
 %%
 %% @throws timeout
--spec wait_exit(pid(), pos_integer()) -> noproc | any().
+-spec wait_exit(pid(), pos_integer() | infinity) -> noproc | any().
 wait_exit(Pid, Tiemout) ->
     Ref = erlang:monitor(process, Pid),
 
