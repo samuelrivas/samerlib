@@ -31,7 +31,7 @@
 %% XXX This function is a temporary hack, will be reimplemented in a sane(r) way
 %% soon (story 28185287 in learnerl project)
 %% @doc removes a directory and all its contents
--spec delete_recursive(string) -> ok.
+-spec delete_recursive(string()) -> ok.
 delete_recursive(Dir) ->
     os:cmd("rm -rf " ++ Dir),
     ok.
