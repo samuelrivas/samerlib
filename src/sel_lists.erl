@@ -32,7 +32,7 @@
 
 -export([keysearch/2, cut_and_zip/2]).
 
-%% @doc Return the first tuple which `Key' as first element in the list
+%% @doc Return the first tuple in the list with `Key' as first element
 %%
 %% @throws {not_found, any()}
 -spec keysearch(any(), [tuple()]) -> any().
