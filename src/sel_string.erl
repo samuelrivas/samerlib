@@ -26,9 +26,14 @@
 
 -module(sel_string).
 
--export([parse_hex/1, format_byte/1, format_byte/2]).
+-export([parse_hex/1, format_byte/1, format_byte/2, format_hex/1,
+         format_hex/2]).
 
 -type letter_case() :: lower | upper.
+
+%%%-------------------------------------------------------------------
+%%% API
+%%%-------------------------------------------------------------------
 
 %% @doc Read a binary from its hexadecimal representation
 %%
@@ -64,6 +69,25 @@ format_byte(Byte) ->
 format_byte(Byte, LetterCase) when 0 =< Byte, 255 >= Byte ->
     Format = get_hex_format(LetterCase),
     lists:flatten(io_lib:format(Format, [Byte])).
+
+%% @equiv format_hex(B, upper)
+-spec format_hex(binary()) -> iolist().
+format_hex(B) -> format_hex(B, upper).
+
+%% @doc Output the hexadecimal formatting of a binary
+%%
+%% For example:
+%% ```
+%% > io:format("~s~n", [sel_string:format_hex(<<"Hello world">>)]).
+%%   48656C6C6F20776F726C64
+%%'''
+-spec format_hex(binary(), letter_case()) -> iolist().
+format_hex(B, Case) ->
+    [format_byte(Byte, Case) || Byte <- binary_to_list(B)].
+
+%%%-------------------------------------------------------------------
+%%% Internals
+%%%-------------------------------------------------------------------
 
 get_hex_format(lower) -> "~2.16.0b";
 get_hex_format(upper) -> "~2.16.0B".
