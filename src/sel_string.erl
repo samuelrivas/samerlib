@@ -56,10 +56,9 @@ parse_hex([H1, H2 | T], Acc) ->
 parse_hex(_, _) ->
     throw(invalid_hex_string).
 
-%% @doc The same as {@link format_byte/2} in upper case
+%% @equiv format_byte(Byte, upper)
 -spec format_byte(byte()) -> string().
-format_byte(Byte) ->
-    format_byte(Byte, upper).
+format_byte(Byte) -> format_byte(Byte, upper).
 
 %% @doc Create a string with the hexadecimal representation of a byte
 %%
