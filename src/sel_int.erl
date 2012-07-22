@@ -26,7 +26,7 @@
 -module(sel_int).
 
 %%%_* Exports ==========================================================
--export([extended_euclid/2, int_div/2]).
+-export([extended_euclid/2, int_div/2, gcd/2]).
 
 %%%_* Includes =========================================================
 
@@ -71,6 +71,12 @@ extended_euclid(A, B) ->
 -spec int_div(integer(), non_zero_integer()) -> {integer(), integer()}.
 int_div(A, B) ->
     {A div B, A rem B}.
+
+%% @doc Returns the greatest common divisor of `A' and `B'
+-spec gcd(integer(), integer()) -> pos_integer().
+gcd(A, B) ->
+    {X, Y} = extended_euclid(A, B),
+    (A*X + B*Y).
 
 %%%_* Private Functions ================================================
 
