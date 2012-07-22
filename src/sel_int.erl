@@ -32,12 +32,34 @@
 
 %%%_* Types ============================================================
 
+-type non_zero_integer() :: neg_integer() | pos_integer().
+
 %%%_* API ==============================================================
 
-%% Returns {X, Y} such that X*A + Y*B = gcd(A, B).
+%% @doc Returns `{X, Y}' such that `X*A + Y*B == gcd(A, B)'
 %%
-%% XXX This implementation is not tail recursive, it might require too much
-%% memory. If so, I'll try an iterative implementation
+%% This function is used by {@link gcd/2}, and by {@link mod_inv/2} to
+%% efficiently find the greatest common divisor and the modulus inverse of
+%% integer numbers
+
+%% This is the recursive implementation of the Extended Euclidean
+%% Algorithm.
+%%
+%% Assume that A > B (Otherwise, the first recursive step just swaps them, so
+%% this condition is true for the rest of the algorithm)
+%%
+%% If B is 0 then we have found the solution in {1, 0}
+%%
+%% Otherwise, Let Q, R such that A = B*Q + R
+%% We can find X' and Y' such that X'*B + Y'*R = gcd(B, R)
+%%
+%% Note that a) R is smaller than A and b) gcd(A, B) == gcd(B, R)
+%%
+%% Thus X'*B + Y'*R = gcd(A, B)          =>
+%%      X'*B + Y'*(A - B*Q) = gcd(A, B)  =>
+%%      (X' - Q*Y')*B + Y'*A = gcd(A, B) =>
+%%      X = Y' and Y = X' - Q * Y'
+-spec extended_euclid(integer(), integer()) -> {integer(), integer()}.
 extended_euclid(_, 0) ->
     {1, 0};
 extended_euclid(A, B) ->
@@ -45,6 +67,8 @@ extended_euclid(A, B) ->
     {X, Y} = extended_euclid(B, R),
     {Y, X - Q * Y}.
 
+%% @doc Returns `{Q, R}' such that `A == Q*B + R'
+-spec int_div(integer(), non_zero_integer()) -> {integer(), integer()}.
 int_div(A, B) ->
     {A div B, A rem B}.
 
