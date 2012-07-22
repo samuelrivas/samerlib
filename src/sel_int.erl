@@ -26,7 +26,7 @@
 -module(sel_int).
 
 %%%_* Exports ==========================================================
--export([extended_euclid/2, int_div/2, gcd/2, mod_abs/2]).
+-export([extended_euclid/2, int_div/2, gcd/2, mod_abs/2, mod_inv/2]).
 
 %%%_* Includes =========================================================
 
@@ -86,6 +86,17 @@ mod_abs(A, Mod) ->
     case A rem Mod of
         X when X < 0 -> Mod + X;
         X -> X
+    end.
+
+%% @doc Returns the inverse of `N' modulus `Mod'
+%% @throws {no_inverse, {N, mod, Mod}}
+-spec mod_inv(integer(), pos_integer()) -> pos_integer().
+mod_inv(N, Mod) ->
+    {A, _} = extended_euclid(mod_abs(N, Mod), Mod),
+    Tentative = mod_abs(A, Mod),
+    case mod_abs(Tentative * N, Mod) of
+        1 -> Tentative;
+        _ -> throw({no_inverse, {N, mod, Mod}})
     end.
 
 %%%_* Private Functions ================================================
