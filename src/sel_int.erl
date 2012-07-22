@@ -26,7 +26,7 @@
 -module(sel_int).
 
 %%%_* Exports ==========================================================
--export([extended_euclid/2, int_div/2, gcd/2]).
+-export([extended_euclid/2, int_div/2, gcd/2, mod_abs/2]).
 
 %%%_* Includes =========================================================
 
@@ -77,6 +77,16 @@ int_div(A, B) ->
 gcd(A, B) ->
     {X, Y} = extended_euclid(A, B),
     (A*X + B*Y).
+
+%% @doc Returns the modulus absolute value
+%%
+%% That is, the equivalent of `A' modulus `Mod' in the range [0, `Mod' - 1]
+-spec mod_abs(integer(), pos_integer()) -> non_neg_integer().
+mod_abs(A, Mod) ->
+    case A rem Mod of
+        X when X < 0 -> Mod + X;
+        X -> X
+    end.
 
 %%%_* Private Functions ================================================
 
