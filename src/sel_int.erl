@@ -26,7 +26,7 @@
 -module(sel_int).
 
 %%%_* Exports ==========================================================
--export([extended_euclid/2, int_div/2, gcd/2, mod_abs/2, mod_inv/2]).
+-export([extended_euclid/2, int_div/2, gcd/2, mod_abs/2, mod_inv/2, sqrt/1]).
 
 %%%_* Includes =========================================================
 
@@ -97,6 +97,24 @@ mod_inv(N, Mod) ->
     case mod_abs(Tentative * N, Mod) of
         1 -> Tentative;
         _ -> throw({no_inverse, {N, mod, Mod}})
+    end.
+
+%% @doc Returns the closest integers to the square root of `N'
+%%
+%% `Low' is the highest number such that `Low * Low =< N'
+%%
+%% `High' is the lowest number such that `High * High >= N'
+%%
+%% Note that if `Low' is equal to `High' then they are the exact square root
+%% of `N'
+-spec sqrt(pos_integer()) -> {pos_integer(), pos_integer()}.
+sqrt(N) when N >= 0 -> sqrt_acc(N, 0).
+
+sqrt_acc(N, Acc) ->
+    case Acc * Acc of
+        N -> {Acc, Acc};
+        Greater when Greater > N -> {Acc - 1, Acc};
+        _Lower -> sqrt_acc(N, Acc + 1)
     end.
 
 %%%_* Private Functions ================================================
