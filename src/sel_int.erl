@@ -115,7 +115,9 @@ sqrt_binary(_N, Low, High) when Low > High ->
     %% root must be between the swapped High and Low values
     {High, Low};
 sqrt_binary(N, Low, High) ->
-    Attempt = round((Low + High) / 2),
+    %% Don't use / to find the midpoint here, for close bignums it can yield
+    %% values higher than High
+    Attempt = (Low + High) bsr 1,
     case Attempt * Attempt of
         N -> {Attempt, Attempt};
         Greater when Greater > N -> sqrt_binary(N, Low, Attempt - 1);
