@@ -108,13 +108,18 @@ mod_inv(N, Mod) ->
 %% Note that if `Low' is equal to `High' then they are the exact square root
 %% of `N'
 -spec sqrt(pos_integer()) -> {pos_integer(), pos_integer()}.
-sqrt(N) when N >= 0 -> sqrt_acc(N, 0).
+sqrt(N) when N >= 0 -> sqrt_binary(N, 0, N).
 
-sqrt_acc(N, Acc) ->
-    case Acc * Acc of
-        N -> {Acc, Acc};
-        Greater when Greater > N -> {Acc - 1, Acc};
-        _Lower -> sqrt_acc(N, Acc + 1)
+sqrt_binary(_N, Low, High) when Low > High ->
+    %% We failed to converge to an exact solution, so the non-integer square
+    %% root must be between the swapped High and Low values
+    {High, Low};
+sqrt_binary(N, Low, High) ->
+    Attempt = round((Low + High) / 2),
+    case Attempt * Attempt of
+        N -> {Attempt, Attempt};
+        Greater when Greater > N -> sqrt_binary(N, Low, Attempt - 1);
+        Lower when Lower < N -> sqrt_binary(N, Attempt + 1, High)
     end.
 
 %%%_* Private Functions ================================================
