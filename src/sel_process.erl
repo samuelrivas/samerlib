@@ -30,7 +30,8 @@
 
 %% @doc Wait until `Pid' exits and return its exit reason
 %%
-%% Returns `noproc' if the process has already before evaluating this function
+%% Returns `noproc' if the process has already finished before evaluating this
+%% function
 -spec wait_exit(pid()) -> noproc | any().
 wait_exit(Pid) ->
     wait_exit(Pid, default_timeout()).
