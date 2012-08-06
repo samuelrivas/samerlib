@@ -107,6 +107,13 @@ mod_inv(N, Mod) ->
 %%
 %% Note that if `Low' is equal to `High' then they are the exact square root
 %% of `N'
+%% @end
+%% IMPLEMENTATION Current algorithm is just a plain binary search between 0 to
+%% N. It is reasonably fast to compute square roots of very big numbers (for
+%% numbers of 512 to 600 bits computing times are at millisecond level in an
+%% intel core i5), but there is room for improvement if this function needs to
+%% be used intensively. The module sel_int_bench, living in the samerlib_tests
+%% application must help when optimising this code)
 -spec sqrt(pos_integer()) -> {pos_integer(), pos_integer()}.
 sqrt(N) when N >= 0 -> sqrt_binary(N, 0, N).
 
