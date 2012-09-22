@@ -8,3 +8,5 @@ doc/edoc-info
 doc/erlang.png
 doc/*.css
 rebar
+deps
+.eunit
