@@ -14,6 +14,9 @@ $(REBAR_REPO_DIR):
 compile: $(REBAR)
 	$(REBAR) compile
 
+check: compile
+	$(REBAR) xref
+
 clean:
 	$(REBAR) clean
 
