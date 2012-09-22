@@ -10,6 +10,7 @@ $(REBAR): $(REBAR_REPO_DIR)
 
 $(REBAR_REPO_DIR):
 	git clone $(REBAR_REPO) $(REBAR_REPO_DIR)
+	cd $(REBAR_REPO_DIR); git checkout -q $(REBAR_VERSION)
 
 get-deps: $(REBAR)
 	$(REBAR) get-deps
