@@ -1,6 +1,7 @@
 *~
 src/temp
-*.beam
+ebin/*.beam
+ebin/samerlib.app
 current_counterexample.eqc
 doc/*.html
 doc/edoc-info

@@ -1,0 +1,9 @@
+%%% -*- mode: erlang -*-
+
+{application, samerlib,
+ [{description, "A bucket for low level, very common functionality"},
+  {vsn, git},
+  {modules, []},
+  {registered, []},
+  {applications, [kernel, stdlib]},
+  {env, []}]}.
