@@ -44,8 +44,8 @@ test_in_dir(Fun) ->
 
 %% @doc behaves as {@link test_in_dir/1}, cleaning up only if `Cleanup' is true.
 %%
-%% This function is intended only for debugging, don't use it in production
-%% code. Ideally, code using it should never be committed to a public directory
+%% This function is intended only for debugging. Ideally, code using it should
+%% never be committed to a public repository.
 %%
 %% @deprecated use it only for dirty local debugging, for committed code use
 %% {@link test_in_dir/1}
@@ -56,6 +56,8 @@ test_in_dir(Cleanup, Fun) ->
           after delete_if(Cleanup, Dir)
           end,
     Res.
+
+%%%_* Internals ========================================================
 
 delete_if(true, Dir) -> sel_file:delete_recursive(Dir);
 delete_if(false, _) -> ok.
