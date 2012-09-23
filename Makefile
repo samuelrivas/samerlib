@@ -3,6 +3,8 @@ REBAR_VERSION = 2.0.0
 REBAR_REPO_DIR = rebar
 REBAR = $(REBAR_REPO_DIR)/rebar
 
+.PHONY: doc clean clean-all
+
 all: compile
 
 $(REBAR): $(REBAR_REPO_DIR)
@@ -23,6 +25,9 @@ check: compile
 
 test: compile
 	$(REBAR) eunit skip_deps=true
+
+doc: $(REBAR)
+	$(REBAR) doc skip_deps=true
 
 clean:
 	$(REBAR) clean
