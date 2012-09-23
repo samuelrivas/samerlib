@@ -1,5 +1,7 @@
 # Samerlib: Some Addictive Modules, Erlang Library
 
+[![Build Status](https://secure.travis-ci.org/samuelrivas/samerlib.png?branch=rebarise)](http://travis-ci.org/samuelrivas/samerlib)
+
 The acronym is not fixed, if a better one comes up, we will update it.
 
 # What is this?
