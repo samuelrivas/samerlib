@@ -25,9 +25,6 @@
 %%% @doc Proper tests for sel_int
 -module(sel_int_tests).
 
-%%%_* Exports ==========================================================
--export([]).
-
 %%%_* Includes =========================================================
 
 -define(PROPER_NO_IMPORTS, true).
