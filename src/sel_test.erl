@@ -67,7 +67,7 @@ props_to_eunit(Module) -> props_to_eunit(Module, 10).
 
 -spec props_to_eunit(module(), non_neg_integer()) -> [any()].
 props_to_eunit(Module, Timeout) ->
-    [{timeout, Timeout, ?_assertEqual({P, true}, wrap_and_check(Module, P))}
+    [{atom_to_list(P), eunitise(Module, P, Timeout)}
      || P <- module_properties(Module)].
 
 %%%_* Internals ========================================================
@@ -106,9 +106,10 @@ base_test_dir() -> "/tmp".
 
 max_dir_attemps() -> 10.
 
-wrap_and_check(Module, P) -> {P, proper:quickcheck(Module:P())}.
-
 module_properties(Module) ->
     [F || {F, 0} <- Module:module_info(exports) , is_property(F)].
 
 is_property(Fun) -> lists:prefix("prop_", atom_to_list(Fun)).
+
+eunitise(Module, Property, Timeout) ->
+    {timeout, Timeout, ?_assert(proper:quickcheck(Module:Property()))}.
