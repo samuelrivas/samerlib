@@ -26,7 +26,7 @@
 
 -module(sel_test).
 
--export([test_in_dir/1, test_in_dir/2, props_to_eunit/1]).
+-export([test_in_dir/1, test_in_dir/2, props_to_eunit/1, props_to_eunit/2]).
 
 %% See the documentation
 -deprecated({test_in_dir, 2}).
@@ -61,9 +61,13 @@ test_in_dir(Cleanup, Fun) ->
           end,
     Res.
 
+%% @doc @equiv props_to_eunit(Module, 10)
+-spec props_to_eunit(module(), non_neg_integer()) -> [any()].
+props_to_eunit(Module) -> props_to_eunit(Module, 10).
+
 -spec props_to_eunit(module()) -> [any()].
-props_to_eunit(Module) ->
-    [?_assertEqual({P, true}, wrap_and_check(Module, P))
+props_to_eunit(Module, Timeout) ->
+    [{timeout, Timeout, ?_assertEqual({P, true}, wrap_and_check(Module, P))}
      || P <- module_properties(Module)].
 
 %%%_* Internals ========================================================
