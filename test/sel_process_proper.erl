@@ -28,6 +28,9 @@
 
 -define(PROPER_NO_IMPORTS, true).
 -include_lib("proper/include/proper.hrl").
+-include_lib("eunit/include/eunit.hrl").
+
+all_props_test_() -> sel_test:props_to_eunit(?MODULE).
 
 prop_wait_exit() ->
     ?FORALL(
