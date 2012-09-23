@@ -35,7 +35,7 @@
 
 %%%_* API ==============================================================
 
-%% @doc creates clean directories to run tests that require actual files.
+%% @doc Create clean directories to run tests that require actual files.
 %%
 %% This function creates an empty directory in /tmp, runs `Fun' with that
 %% directory as argument, and deletes the directory and all its contents
@@ -46,7 +46,8 @@
 test_in_dir(Fun) ->
     test_in_dir(true, Fun).
 
-%% @doc behaves as {@link test_in_dir/1}, cleaning up only if `Cleanup' is true.
+%% @doc Same as {@link test_in_dir/1}, but cleaning up only if `Cleanup' is
+%% true.
 %%
 %% This function is intended only for debugging. Ideally, code using it should
 %% never be committed to a public repository.
@@ -61,10 +62,18 @@ test_in_dir(Cleanup, Fun) ->
           end,
     Res.
 
-%% @doc @equiv props_to_eunit(Module, 10)
+%% @equiv props_to_eunit(Module, 10)
 -spec props_to_eunit(module()) -> [any()].
 props_to_eunit(Module) -> props_to_eunit(Module, 10).
 
+%% @doc Return an Eunit test that checks all properties in a module.
+%%
+%% To get all properties tested as part of the eunit suite (e.g. when running
+%% `<module>:test()') you must include something like this in your test module:
+%% ```
+%% all_props_test_() -> sel_test:props_to_eunit(?MODULE).
+%% '''
+%% Currently, only proper properties are supported.
 -spec props_to_eunit(module(), non_neg_integer()) -> [any()].
 props_to_eunit(Module, Timeout) ->
     [{atom_to_list(P), eunitise(Module, P, Timeout)}
