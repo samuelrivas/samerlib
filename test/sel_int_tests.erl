@@ -23,7 +23,7 @@
 %%% THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 %%% @doc Proper tests for sel_int
--module(sel_int_proper).
+-module(sel_int_tests).
 
 %%%_* Exports ==========================================================
 -export([]).

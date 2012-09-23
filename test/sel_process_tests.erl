@@ -24,7 +24,7 @@
 
 %%% @doc This module tests {@link sel_process}
 
--module(sel_process_proper).
+-module(sel_process_tests).
 
 -define(PROPER_NO_IMPORTS, true).
 -include_lib("proper/include/proper.hrl").

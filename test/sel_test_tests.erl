@@ -28,7 +28,7 @@
 %%% sel_test:test_in_dir/1}) are not automatically seeded, so tests can be
 %%% repeated relaunching the test process.
 
--module(sel_test_eunit).
+-module(sel_test_tests).
 
 -define(PROPER_NO_IMPORTS, true).
 -include_lib("proper/include/proper.hrl").

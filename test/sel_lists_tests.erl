@@ -24,7 +24,7 @@
 
 %%% @doc functions to test sel_lists module
 
--module(sel_lists_proper).
+-module(sel_lists_tests).
 
 -define(PROPER_NO_IMPORTS, true).
 -include_lib("proper/include/proper.hrl").
