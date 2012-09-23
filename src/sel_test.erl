@@ -62,10 +62,10 @@ test_in_dir(Cleanup, Fun) ->
     Res.
 
 %% @doc @equiv props_to_eunit(Module, 10)
--spec props_to_eunit(module(), non_neg_integer()) -> [any()].
+-spec props_to_eunit(module()) -> [any()].
 props_to_eunit(Module) -> props_to_eunit(Module, 10).
 
--spec props_to_eunit(module()) -> [any()].
+-spec props_to_eunit(module(), non_neg_integer()) -> [any()].
 props_to_eunit(Module, Timeout) ->
     [{timeout, Timeout, ?_assertEqual({P, true}, wrap_and_check(Module, P))}
      || P <- module_properties(Module)].
