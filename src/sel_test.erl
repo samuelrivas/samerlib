@@ -26,10 +26,14 @@
 
 -module(sel_test).
 
--export([test_in_dir/1, test_in_dir/2]).
+-export([test_in_dir/1, test_in_dir/2, props_to_eunit/1]).
 
 %% See the documentation
 -deprecated({test_in_dir, 2}).
+
+-include_lib("eunit/include/eunit.hrl").
+
+%%%_* API ==============================================================
 
 %% @doc creates clean directories to run tests that require actual files.
 %%
@@ -56,6 +60,11 @@ test_in_dir(Cleanup, Fun) ->
           after delete_if(Cleanup, Dir)
           end,
     Res.
+
+-spec props_to_eunit(module()) -> [any()].
+props_to_eunit(Module) ->
+    [?_assertEqual({P, true}, wrap_and_check(Module, P))
+     || P <- module_properties(Module)].
 
 %%%_* Internals ========================================================
 
@@ -92,3 +101,10 @@ random_letter() ->
 base_test_dir() -> "/tmp".
 
 max_dir_attemps() -> 10.
+
+wrap_and_check(Module, P) -> {P, proper:quickcheck(Module:P())}.
+
+module_properties(Module) ->
+    [F || {F, 0} <- Module:module_info(exports) , is_property(F)].
+
+is_property(Fun) -> lists:prefix("prop_", atom_to_list(Fun)).

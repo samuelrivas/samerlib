@@ -30,6 +30,8 @@
 
 -module(sel_test_eunit).
 
+-define(PROPER_NO_IMPORTS, true).
+-include_lib("proper/include/proper.hrl").
 -include_lib("eunit/include/eunit.hrl").
 
 %%--------------------------------------------------------------------
@@ -93,3 +95,16 @@ dir_is_cleaned_up_test_() ->
 can_repeat_test_in_dir_test_() ->
     T = {spawn, ?_test(sel_test:test_in_dir(fun(_) -> true end))},
     {inparallel, lists:duplicate(10, T)}.
+
+%%--------------------------------------------------------------------
+%% prop_to_eunit tests
+%%--------------------------------------------------------------------
+fails_on_failing_prop_test_() ->
+  ?_assertEqual(error, eunit:test(sel_test:props_to_eunit(?MODULE))).
+
+gets_all_properties_test_() ->
+    ?_assertEqual(2, length(sel_test:props_to_eunit(?MODULE))).
+
+prop_wrong() -> ?FORALL(X, proper_types:integer(), X < 5).
+
+prop_right() -> ?FORALL(X, proper_types:integer(), is_integer(X)).
