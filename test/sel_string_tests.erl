@@ -24,7 +24,7 @@
 
 %%% @doc functions to test sel_string module
 
--module(sel_string_proper).
+-module(sel_string_tests).
 
 -define(PROPER_NO_IMPORTS, true).
 -include_lib("proper/include/proper.hrl").

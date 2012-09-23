@@ -26,7 +26,7 @@
 %%%
 %%% @end
 
--module(yalog_eunit).
+-module(yalog_tests).
 
 -include_lib("samerlib/include/yalog.hrl").
 -include_lib("eunit/include/eunit.hrl").
