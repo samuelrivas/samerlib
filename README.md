@@ -18,3 +18,5 @@ dependencies.
 # Testing
 
 `make test` will run all the tests and produce a coverage report.
+
+`make check` will run static checks (xref currently).
