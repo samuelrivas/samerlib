@@ -8,16 +8,16 @@ A collection of common functionality that can be useful for a lot of different
 projects. It is the kind of application that wants to be named "stuff" or
 "misc," or even "misc stuff."
 
-The criteria that dictates whether a module is addictive vaguely defined as
+The (vague) criteria that dictates whether a module is addictive could be
 "something that is useful in several different contexts, but has not enough
 entity to form an application."
 
-There is also a way of telling if a module is not addictive, equally
-imprecise: "something that implements any kind of business logic or will never
-be used in more than one specific context."
+The (as vague as before) way of telling if a module is not addictive could be
+"something that implements any kind of business logic or will never be used in
+more than one specific context."
 
-Another way of thinking about Samerlib is that it compares to the purpose of the
-[glib](http://developer.gnome.org/glib/), but for Erlang.
+Yet another imprecise way of thinking about Samerlib is that it compares to the
+purpose of the [glib](http://developer.gnome.org/glib/), but for Erlang.
 
 # Branching
 
