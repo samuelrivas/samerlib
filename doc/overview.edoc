@@ -1,4 +1,10 @@
-# Strangely Absurd Material for an Erlang Lib
+@title Samerlib
+@author Samuel Rivas <samuelrivas@gmail.com>
+@copyright 2012 Samuel Rivas
 
-A collection of loosely related utility functions that used to be duplicated in
-most of my projects
+@doc Some Addictive Modules, Erlang Library
+
+See the README for more info. Either at the <a
+href="https://github.com/samuelrivas/samerlib/tree/master#readme"
+target="_blank">last stable version,</a> or the one in the source you used to
+generate this file.
