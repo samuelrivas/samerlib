@@ -34,7 +34,7 @@ guaranteed not to change their history or be ever deleted. Any other branch is
 considered temporary and may be rebased or deleted without notice.
 
 Also, `master` and `develop` are not allowed to contain merge commits. Any merge
-from another branch is doing rebasing it first to the HEAD of `develop`.
+from another branch is done rebasing it first to the HEAD of `develop`.
 
 # Compiling
 
