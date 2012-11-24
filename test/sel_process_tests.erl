@@ -35,6 +35,12 @@
 %%%-------------------------------------------------------------------
 all_props_test_() -> sel_test:props_to_eunit(?MODULE).
 
+bad_arguments_test_() ->
+    [?_assertError(_, sel_process:wait_exit(foo)),
+     ?_assertError(_, sel_process:wait_exit(10)),
+     ?_assertError(_, sel_process:wait_exit("foo")),
+     ?_assertError(_, sel_process:wait_exit({"foo", self()}))].
+
 %%%-------------------------------------------------------------------
 %%% Properties
 %%%-------------------------------------------------------------------
