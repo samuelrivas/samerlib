@@ -30,8 +30,14 @@
 -include_lib("proper/include/proper.hrl").
 -include_lib("eunit/include/eunit.hrl").
 
+%%%-------------------------------------------------------------------
+%%% Eunit tests
+%%%-------------------------------------------------------------------
 all_props_test_() -> sel_test:props_to_eunit(?MODULE).
 
+%%%-------------------------------------------------------------------
+%%% Properties
+%%%-------------------------------------------------------------------
 prop_wait_exit() ->
     ?FORALL(
        {Millisecs, Reason}, {millisecs(), reason()},
@@ -76,6 +82,10 @@ prop_no_proc() ->
                   exit(Pid, kill)
               end
           end)).
+
+%%%-------------------------------------------------------------------
+%%% Internal functions
+%%%-------------------------------------------------------------------
 
 %% Wait at least 10 msecs to avoid monitoring a process that already died
 millisecs() -> proper_types:range(10, 100).
