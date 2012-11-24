@@ -33,7 +33,7 @@
 %% Returns `noproc' if the process has already finished before evaluating this
 %% function
 -spec wait_exit(pid()) -> noproc | any().
-wait_exit(Pid) ->
+wait_exit(Pid) when is_pid(Pid) ->
     wait_exit(Pid, default_timeout()).
 
 %% @doc Like {@link wait_exit/1} but with a timeout
