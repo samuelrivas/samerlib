@@ -43,8 +43,8 @@ start_app(_, 0) ->
     throw(too_much_recursion);
 start_app(App, N) ->
     case application:start(App) of
-	{error, {already_started, App}} ->
-	    [];
+        {error, {already_started, App}} ->
+            [];
         {error, {not_started, OtherApp}} ->
             [start_app(OtherApp, N - 1),
              start_app(App, N - 1)];
@@ -60,5 +60,3 @@ start_app(App, N) ->
 stop_apps(Apps) ->
     lists:foreach(fun(A) -> application:stop(A) end, lists:reverse(Apps)),
     ok.
-
-
