@@ -28,10 +28,13 @@
 
 -module(sel_gen_server).
 
--export([call/2, call/3]).
+-export([call/2, call/3, cast/2]).
 
 %% @doc a crashfied version of gen_server:call/2
 call(Ref, Req) -> crashfy:untuple(gen_server:call(Ref, Req)).
 
 %% @doc a crashfied version of gen_server:call/3
 call(Ref, Req, Tout) -> crashfy:untuple(gen_server:call(Ref, Req, Tout)).
+
+%% @doc a crashfied version of gen_server:cast/2
+cast(Ref, Req) -> crashfy:untuple(gen_server:cast(Ref, Req)).
