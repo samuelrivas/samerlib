@@ -68,9 +68,6 @@ prop_keysearch_neg() ->
                   proper:equals(Key, key(Tuple))
           end)).
 
-external_tuple(L) ->
-    ?SUCHTHAT(T, small_tuple(), not lists:keymember(key(T), 1, L)).
-
 %%%-------------------------------------------------------------------
 %%% Generators
 %%%-------------------------------------------------------------------
@@ -95,3 +92,6 @@ filter_duplicated_keys([H | T]) ->
 keydelete(Key, List) -> [Tuple || Tuple <- List, Key /= key(Tuple)].
 
 key(Tuple) -> element(1, Tuple).
+
+external_tuple(L) ->
+    ?SUCHTHAT(T, small_tuple(), not lists:keymember(key(T), 1, L)).
