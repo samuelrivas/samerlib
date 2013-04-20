@@ -30,7 +30,7 @@
 
 -module(sel_lists).
 
--export([keysearch/2, cut_and_zip/2]).
+-export([keysearch/2, cut_and_zip/2, take_last/2]).
 
 %% @doc Return the first tuple in the list with `Key' as first element
 %%
@@ -55,3 +55,10 @@ keysearch(Key, L) ->
 cut_and_zip([], _L2) -> [];
 cut_and_zip(_L1, []) -> [];
 cut_and_zip([H1|T1], [H2|T2]) -> [{H1, H2} | cut_and_zip(T1, T2)].
+
+%% @doc Return the last `N' elements of `L'
+%%
+%% Returns `L' if it has less than `N' elements
+-spec take_last(N::non_neg_integer(), L::list(A)) ->list(A).
+take_last(N, L) when length(L) =< N -> L;
+take_last(N, [_|T]) -> take_last(N, T).
