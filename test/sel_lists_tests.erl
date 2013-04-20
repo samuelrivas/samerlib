@@ -50,7 +50,7 @@ prop_keysearch_pos() ->
                          sel_lists:keysearch(key(Tuple), L) /= Tuple
                  end,
                  L),
-           proper:equals([], Wrong)
+           equals([], Wrong)
        end).
 
 %% We get a valid exception result when searching for any element not in the
@@ -65,7 +65,7 @@ prop_keysearch_neg() ->
               false
           catch
               {not_found, Key} ->
-                  proper:equals(Key, key(Tuple))
+                  equals(Key, key(Tuple))
           end)).
 
 prop_take_last() ->
@@ -75,7 +75,7 @@ prop_take_last() ->
            Last = sel_lists:take_last(N, L),
            ExpectedLength = lists:min([N, length(L)]),
            proper:conjunction(
-             [{length, proper:equals(length(Last), ExpectedLength)},
+             [{length, equals(length(Last), ExpectedLength)},
               {suffix, lists:suffix(Last, L)}])
        end).
 %%%-------------------------------------------------------------------
@@ -107,3 +107,8 @@ key(Tuple) -> element(1, Tuple).
 
 external_tuple(L) ->
     ?SUCHTHAT(T, small_tuple(), not lists:keymember(key(T), 1, L)).
+
+%%%-------------------------------------------------------------------
+%%% Internals
+%%%-------------------------------------------------------------------
+equals(A, B) -> proper:equals(A, B).
