@@ -70,8 +70,7 @@ extended_euclid(A, B) ->
 
 %% @doc Returns `{Q, R}' such that `A == Q*B + R'
 -spec int_div(integer(), non_zero_integer()) -> {integer(), integer()}.
-int_div(A, B) ->
-    {A div B, A rem B}.
+int_div(A, B) -> {A div B, A rem B}.
 
 %% @doc Returns the greatest common divisor of `A' and `B'
 -spec gcd(integer(), integer()) -> pos_integer().
@@ -86,14 +85,14 @@ gcd(A, B) ->
 mod_abs(A, Mod) ->
     case A rem Mod of
         X when X < 0 -> Mod + X;
-        X -> X
+        X            -> X
     end.
 
 %% @doc Returns the inverse of `N' modulus `Mod'
 %% @throws {no_inverse, {N, mod, Mod}}
 -spec mod_inv(integer(), pos_integer()) -> pos_integer().
 mod_inv(N, Mod) ->
-    {A, _} = extended_euclid(mod_abs(N, Mod), Mod),
+    {A, _}    = extended_euclid(mod_abs(N, Mod), Mod),
     Tentative = mod_abs(A, Mod),
     case mod_abs(Tentative * N, Mod) of
         1 -> Tentative;
@@ -127,9 +126,9 @@ sqrt_binary(N, Low, High) ->
     %% values higher than High
     Attempt = (Low + High) bsr 1,
     case Attempt * Attempt of
-        N -> {Attempt, Attempt};
+        N                        -> {Attempt, Attempt};
         Greater when Greater > N -> sqrt_binary(N, Low, Attempt - 1);
-        Lower when Lower < N -> sqrt_binary(N, Attempt + 1, High)
+        Lower   when Lower   < N -> sqrt_binary(N, Attempt + 1, High)
     end.
 
 %%%_* Private Functions ================================================
