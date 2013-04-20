@@ -82,7 +82,7 @@ prop_mod_abs() ->
 
 prop_mod_inv() ->
     ?FORALL(
-       {A, Mod}, invertible_pair(),
+       {A, Mod}, coprime_pair(),
        begin
            Ainv = sel_int:mod_inv(A, Mod),
            proper:conjunction(
@@ -118,13 +118,26 @@ prop_sqrt() ->
 
 non_zero_int()     -> ?SUCHTHAT(N, proper_types:integer(), N /= 0).
 positive_integer() -> proper_types:pos_integer().
+prime()            -> proper_types:oneof(primes()).
+factors()          -> proper_types:non_empty(proper_types:list(prime())).
+
+other_factors(Factors) ->
+    Factor = proper_types:oneof(primes() -- Factors),
+    proper_types:non_empty(proper_types:list(Factor)).
 
 pair(Gen) -> {Gen, Gen}.
 
-invertible_pair() ->
-    ?SUCHTHAT(
-       {A, B}, {proper_types:integer(), proper_types:pos_integer()},
-       A rem B /= 0 andalso sel_int:gcd(A, B) =:= 1).
+coprime_pair() ->
+    ?LET(
+       {Sign, FactorsA}, {proper_types:oneof([-1, 1]), factors()},
+       ?LET(
+          FactorsB, other_factors(FactorsA),
+          {Sign * mult(FactorsA), mult(FactorsB)})).
+
+mult(Factors) -> reduce(fun(A, B) -> A * B end, Factors).
+
+reduce(F, [H|T]) -> lists:foldl(F, H, T);
+reduce(_F, L)    -> L.
 
 %%%_* Private Functions ================================================
 
@@ -143,6 +156,10 @@ no_greater_divisor(A, B, Gcd) ->
 mod_number_conditions(N, Mod) ->
     [{positive, N >= 0},
      {in_range, N < Mod}].
+
+primes() ->
+    [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71,
+     73, 79, 83, 89, 97, 101].
 
 %%%_* Emacs ============================================================
 %%% Local Variables:
