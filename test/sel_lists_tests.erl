@@ -36,6 +36,12 @@
 all_props_test_() -> sel_test:props_to_eunit(?MODULE).
 
 %%%-------------------------------------------------------------------
+%%% EUnit tests
+%%%-------------------------------------------------------------------
+reduce_empty_list_test() ->
+    ?assertError(function_clause, sel_lists:reduce(fun(_, _) -> foo end, [])).
+
+%%%-------------------------------------------------------------------
 %%% Properties
 %%%-------------------------------------------------------------------
 
@@ -92,6 +98,18 @@ prop_cut_and_zip() ->
              ])
        end).
 
+prop_reduce() ->
+    ?FORALL(
+       {X, N}, {proper_types:integer(), proper_types:pos_integer()},
+       begin
+           L = lists:seq(X, X + N - 1),
+           proper:equals(progression_sum(X, N), sel_lists:reduce(sum(), L))
+       end).
+
+progression_sum(First, N) ->
+    Last = First + N - 1,
+    trunc(N * (First + Last) / 2).
+
 %%%-------------------------------------------------------------------
 %%% Generators
 %%%-------------------------------------------------------------------
@@ -126,3 +144,5 @@ external_tuple(L) ->
 %%% Internals
 %%%-------------------------------------------------------------------
 equals(A, B) -> proper:equals(A, B).
+
+sum() -> fun(X, Y) -> X + Y end.
