@@ -134,10 +134,7 @@ coprime_pair() ->
           FactorsB, other_factors(FactorsA),
           {Sign * mult(FactorsA), mult(FactorsB)})).
 
-mult(Factors) -> reduce(fun(A, B) -> A * B end, Factors).
-
-reduce(F, [H|T]) -> lists:foldl(F, H, T);
-reduce(_F, L)    -> L.
+mult(Factors) -> sel_lists:reduce(fun(A, B) -> A * B end, Factors).
 
 %%%_* Private Functions ================================================
 
