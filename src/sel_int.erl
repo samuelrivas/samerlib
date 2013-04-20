@@ -109,7 +109,7 @@ mod_inv(N, Mod) ->
 %% Note that if `Low' is equal to `High' then they are the exact square root
 %% of `N'
 %% @end
-%% IMPLEMENTATION Current algorithm is just a plain binary search between 0 to
+%% IMPLEMENTATION Current algorithm is just a plain binary search from 0 to
 %% N. It is reasonably fast to compute square roots of very big numbers (for
 %% numbers of 512 to 600 bits computing times are at millisecond level in an
 %% intel core i5), but there is room for improvement if this function needs to
