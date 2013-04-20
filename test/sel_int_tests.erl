@@ -44,8 +44,8 @@ prop_extended_euclid() ->
            {X, Y} = sel_int:extended_euclid(A, B),
            D = X*A + Y*B,
            proper:conjunction(
-             [{integer_x, is_integer(X)}
-              , {integer_y, is_integer(Y)}
+             [{integer_x, is_integer(X)},
+              {integer_y, is_integer(Y)}
               | gcd_conditions(A, B, D)])
        end).
 
@@ -55,11 +55,11 @@ prop_integer_division() ->
        begin
            {Q, R} = sel_int:int_div(A, B),
            proper:conjunction(
-             [{result, proper:equals(A, Q * B + R)}
-              , {integer_q, is_integer(Q)}
-              , {integer_r, is_integer(R)}
-              , {sign_q, Q*A*B >= 0}
-              , {sign_r, R*A >= 0}])
+             [{result    , proper:equals(A, Q * B + R)},
+              {integer_q , is_integer(Q)},
+              {integer_r , is_integer(R)},
+              {sign_q    , Q*A*B >= 0},
+              {sign_r    , R*A >= 0}])
        end).
 
 prop_gcd() ->
@@ -86,14 +86,14 @@ prop_mod_inv() ->
        begin
            Ainv = sel_int:mod_inv(A, Mod),
            proper:conjunction(
-             [{inverse, proper:equals(1, sel_int:mod_abs(Ainv * A, Mod))}
-              , {not_zero, Ainv /= 0}
+             [{inverse , proper:equals(1, sel_int:mod_abs(Ainv * A, Mod))},
+              {not_zero, Ainv /= 0}
               | mod_number_conditions(Ainv, Mod)])
        end).
 
 prop_no_mod_inv() ->
     ?FORALL(
-       {A, Mod}, {proper_types:integer(), proper_types:pos_integer()},
+       {A, Mod}, {proper_types:integer(), positive_integer()},
        try sel_int:mod_inv(A, Mod) of
            _ -> true
        catch
@@ -103,22 +103,21 @@ prop_no_mod_inv() ->
 
 prop_sqrt() ->
     ?FORALL(
-       N, proper_types:pos_integer(),
+       N, positive_integer(),
        begin
            {Min, Max} = sel_int:sqrt(N),
            proper:conjunction(
-             [{diff, Max - Min =< 1}
-              , {positive_max, Max >= 0}
-              , {positive_min, Min >= 0}
-              , {max, Max * Max >= N}
-              , {min, Min * Min =< N}
-             ])
+             [{diff         , Max - Min =< 1},
+              {positive_max , Max >= 0},
+              {positive_min , Min >= 0},
+              {max          , Max * Max >= N},
+              {min          , Min * Min =< N}])
        end).
 
 %%%_* Generators =======================================================
 
-non_zero_int() ->
-    ?SUCHTHAT(N, proper_types:integer(), N /= 0).
+non_zero_int()     -> ?SUCHTHAT(N, proper_types:integer(), N /= 0).
+positive_integer() -> proper_types:pos_integer().
 
 pair(Gen) -> {Gen, Gen}.
 
@@ -130,10 +129,10 @@ invertible_pair() ->
 %%%_* Private Functions ================================================
 
 gcd_conditions(A, B, Gcd) ->
-      [{integer, is_integer(Gcd)}
-       , {divides_a, proper:equals(0, A rem Gcd)}
-       , {divides_b, proper:equals(0, B rem Gcd)}
-       , {no_greater_divisor, no_greater_divisor(A, B, Gcd)}].
+      [{integer            , is_integer(Gcd)},
+       {divides_a          , proper:equals(0, A rem Gcd)},
+       {divides_b          , proper:equals(0, B rem Gcd)},
+       {no_greater_divisor , no_greater_divisor(A, B, Gcd)}].
 
 no_greater_divisor(A, B, Gcd) ->
     Candidates = lists:seq(abs(Gcd) + 1, erlang:min(abs(A), abs(B))),
@@ -142,8 +141,8 @@ no_greater_divisor(A, B, Gcd) ->
           Candidates).
 
 mod_number_conditions(N, Mod) ->
-    [{positive, N >= 0}
-     , {in_range, N < Mod}].
+    [{positive, N >= 0},
+     {in_range, N < Mod}].
 
 %%%_* Emacs ============================================================
 %%% Local Variables:
