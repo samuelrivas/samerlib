@@ -73,7 +73,7 @@ prop_take_last() ->
        {N, L}, {proper_types:non_neg_integer(), int_list()},
        begin
            Last = sel_lists:take_last(N, L),
-           ExpectedLength = lists:min([N, length(L)]),
+           ExpectedLength = min(N, length(L)),
            proper:conjunction(
              [{length, equals(length(Last), ExpectedLength)},
               {suffix, lists:suffix(Last, L)}])
