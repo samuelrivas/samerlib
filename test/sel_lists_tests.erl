@@ -78,6 +78,20 @@ prop_take_last() ->
              [{length, equals(length(Last), ExpectedLength)},
               {suffix, lists:suffix(Last, L)}])
        end).
+
+prop_cut_and_zip() ->
+    ?FORALL(
+       {L1, L2}, {int_list(), int_list()},
+       begin
+           Zipped   = sel_lists:cut_and_zip(L1, L2),
+           {X1, X2} = lists:unzip(Zipped),
+           proper:conjunction(
+             [{length  , equals(min(length(L1), length(L2)), length(Zipped))},
+              {prefix_1, lists:prefix(X1, L1)},
+              {prefix_2, lists:prefix(X2, L2)}
+             ])
+       end).
+
 %%%-------------------------------------------------------------------
 %%% Generators
 %%%-------------------------------------------------------------------
