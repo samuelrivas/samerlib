@@ -68,9 +68,21 @@ prop_keysearch_neg() ->
                   proper:equals(Key, key(Tuple))
           end)).
 
+prop_take_last() ->
+    ?FORALL(
+       {N, L}, {proper_types:non_neg_integer(), int_list()},
+       begin
+           Last = sel_lists:take_last(N, L),
+           ExpectedLength = lists:min([N, length(L)]),
+           proper:conjunction(
+             [{length, proper:equals(length(Last), ExpectedLength)},
+              {suffix, lists:suffix(Last, L)}])
+       end).
 %%%-------------------------------------------------------------------
 %%% Generators
 %%%-------------------------------------------------------------------
+int_list() -> proper_types:list(proper_types:integer()).
+
 tuple_list() ->
     ?LET(L, proper_types:list(small_tuple()), filter_duplicated_keys(L)).
 
