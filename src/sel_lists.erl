@@ -35,7 +35,7 @@
 %% @doc Return the first tuple in the list with `Key' as first element
 %%
 %% @throws {not_found, any()}
--spec keysearch(any(), [tuple()]) -> any().
+-spec keysearch(any(), [tuple()]) -> tuple().
 keysearch(Key, L) ->
     case lists:keysearch(Key, 1, L) of
         {value, Tuple} -> Tuple;
