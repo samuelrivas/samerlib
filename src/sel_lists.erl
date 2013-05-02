@@ -30,7 +30,8 @@
 
 -module(sel_lists).
 
--export([keysearch/2, cut_and_zip/2, take/2, take_last/2, reduce/2]).
+-export([keysearch/2, cut_and_zip/2, take/2, take_last/2, reduce/2, drop/2,
+         drop_last/2]).
 
 %% @doc Return the first tuple in the list with `Key' as first element
 %%
@@ -80,3 +81,16 @@ take_last(N, [_|T]) -> take_last(N, T).
 %% `L' cannot be empty
 -spec reduce(fun((A, A) -> A), L::[A]) -> A.
 reduce(F, [H|T]) -> lists:foldl(F, H, T).
+
+%% @doc Return a copy of `L' list with the first `N' elements removed
+%%
+%% Returns [] if `L' has less than `N' elements
+-spec drop(N::non_neg_integer(), [A]) -> [A].
+drop(N, [_|T]) when N > 0 -> drop(N - 1, T);
+drop(_, L) -> L.
+
+%% @doc Return a copy of `L' with the last `N' elements removed
+%%
+%% Returns [] if `L' has less than `N' elements
+-spec drop_last(N::non_neg_integer(), [A]) -> [A].
+drop_last(N, L) -> lists:reverse(drop(N, lists:reverse(L))).
