@@ -103,6 +103,10 @@ progression_sum(First, N) ->
     Last = First + N - 1,
     trunc(N * (First + Last) / 2).
 
+prop_drop() -> generic_drop_property(drop, suffix).
+
+prop_drop_last() -> generic_drop_property(drop_last, prefix).
+
 %%%-------------------------------------------------------------------
 %%% Property Templates
 %%%-------------------------------------------------------------------
@@ -117,6 +121,16 @@ generic_take_property(TakeFun, ListCheck) ->
               {suffix, lists:ListCheck(Last, L)}])
        end).
 
+generic_drop_property(DropFun, ListCheck) ->
+    ?FORALL(
+       {N, L}, {proper_types:non_neg_integer(), int_list()},
+       begin
+           Result         = sel_lists:DropFun(N, L),
+           ExpectedLength = max(0, length(L) - N),
+           proper:conjunction(
+             [{length, equals(length(Result), ExpectedLength)},
+              {ListCheck, lists:ListCheck(Result, L)}])
+       end).
 
 %%%-------------------------------------------------------------------
 %%% Generators
