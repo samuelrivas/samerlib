@@ -99,10 +99,6 @@ prop_reduce() ->
            proper:equals(progression_sum(X, N), sel_lists:reduce(sum(), L))
        end).
 
-progression_sum(First, N) ->
-    Last = First + N - 1,
-    trunc(N * (First + Last) / 2).
-
 prop_drop() -> generic_drop_property(drop, suffix).
 
 prop_drop_last() -> generic_drop_property(drop_last, prefix).
@@ -168,3 +164,7 @@ external_tuple(L) ->
 equals(A, B) -> proper:equals(A, B).
 
 sum() -> fun(X, Y) -> X + Y end.
+
+progression_sum(First, N) ->
+    Last = First + N - 1,
+    trunc(N * (First + Last) / 2).
