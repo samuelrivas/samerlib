@@ -74,16 +74,9 @@ prop_keysearch_neg() ->
                   equals(Key, key(Tuple))
           end)).
 
-prop_take_last() ->
-    ?FORALL(
-       {N, L}, {proper_types:non_neg_integer(), int_list()},
-       begin
-           Last = sel_lists:take_last(N, L),
-           ExpectedLength = min(N, length(L)),
-           proper:conjunction(
-             [{length, equals(length(Last), ExpectedLength)},
-              {suffix, lists:suffix(Last, L)}])
-       end).
+prop_take_last() -> generic_take_property(take_last, suffix).
+
+prop_take() -> generic_take_property(take, prefix).
 
 prop_cut_and_zip() ->
     ?FORALL(
@@ -109,6 +102,21 @@ prop_reduce() ->
 progression_sum(First, N) ->
     Last = First + N - 1,
     trunc(N * (First + Last) / 2).
+
+%%%-------------------------------------------------------------------
+%%% Property Templates
+%%%-------------------------------------------------------------------
+generic_take_property(TakeFun, ListCheck) ->
+    ?FORALL(
+       {N, L}, {proper_types:non_neg_integer(), int_list()},
+       begin
+           Last           = sel_lists:TakeFun(N, L),
+           ExpectedLength = min(N, length(L)),
+           proper:conjunction(
+             [{length, equals(length(Last), ExpectedLength)},
+              {suffix, lists:ListCheck(Last, L)}])
+       end).
+
 
 %%%-------------------------------------------------------------------
 %%% Generators
