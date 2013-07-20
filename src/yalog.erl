@@ -35,7 +35,8 @@
 
 -export([test/0]).
 
--type entry_type() :: info|warning|error|debug.
+-type entry_type()      :: prod_entry_type()|debug.
+-type prod_entry_type() :: info|warning|error.
 
 -spec test() -> ok.
 test() ->
@@ -76,7 +77,7 @@ debug(Module, Line, Format) -> debug(Module, Line, Format, []).
 debug(Module, Line, Format, Args) ->
     log(debug, Module, Line, Format, Args).
 
--spec log(entry_type(), atom(), string(), [term()]) -> ok.
+-spec log(prod_entry_type(), atom(), string(), [term()]) -> ok.
 log(Type, Module, Format, Args) ->
     log(Type, Module, none, Format, Args).
 
@@ -88,8 +89,12 @@ just_now() -> calendar:now_to_universal_time(now()).
 
 format_entry(Type, Time, Module, Line, Format, Args)
   when is_list(Args) ->
-    [format_type(Type), " [", format_date(Time), " ",
-     format_source(Module, Line), "] ", io_lib:format(Format, Args), "\r\n"].
+    io_lib:format(
+      "~s [~s ~s] ~s\r\n",
+      [format_type(Type),
+       format_date(Time),
+       format_source(Module, Line),
+       io_lib:format(Format, Args)]).
 
 format_type(info) -> "INF";
 format_type(warning) -> "WAR";
