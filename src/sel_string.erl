@@ -26,7 +26,7 @@
 
 -module(sel_string).
 
--export([parse_hex/1, format_byte/1, format_byte/2, format_hex/1,
+-export([format/2, parse_hex/1, format_byte/1, format_byte/2, format_hex/1,
          format_hex/2]).
 
 -type letter_case() :: lower | upper.
@@ -34,6 +34,15 @@
 %%%-------------------------------------------------------------------
 %%% API
 %%%-------------------------------------------------------------------
+
+%% @doc Like `io_lib:format/2', but flattening the result
+%%
+%% Favour this function over io_lib's only when you really need a flat result,
+%% in most situations io_lib's deep strings are perfectly fine and is not worth
+%% paying the performance penalty of flattening.
+-spec format(string(), [term()]) -> string().
+format(Fmt, Args) ->
+    lists:flatten(io_lib:format(Fmt, Args)).
 
 %% @doc Read a binary from its hexadecimal representation
 %%

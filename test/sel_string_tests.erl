@@ -37,6 +37,14 @@
 all_props_test_() -> sel_test:props_to_eunit(?MODULE).
 
 %%%-------------------------------------------------------------------
+%%% EUnit Tests
+%%%-------------------------------------------------------------------
+format_test() ->
+    ?assertEqual(
+       "The owls are not what they seem",
+       sel_string:format("The ~s are not what they ~p", ["owls", seem])).
+
+%%%-------------------------------------------------------------------
 %%% Properties
 %%%-------------------------------------------------------------------
 prop_parse_hex() ->
