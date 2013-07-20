@@ -20,8 +20,10 @@ get-deps: $(REBAR)
 compile: get-deps
 	$(REBAR) compile
 
-check: compile
-	$(REBAR) xref
+check: xref
+
+xref: compile
+	$(REBAR) xref skip_deps=true
 
 test: compile
 	$(REBAR) eunit skip_deps=true
