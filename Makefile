@@ -2,6 +2,9 @@ REBAR_REPO := https://github.com/basho/rebar.git
 REBAR_VERSION := 2.0.0
 REBAR_REPO_DIR := rebar
 REBAR := $(REBAR_REPO_DIR)/rebar
+DIALYZER_PLT := .dialyzer.plt
+PRODUCTION_ERLS := $(wildcard src/*.erl)
+PRODUCTION_BEAMS := $(addprefix ebin/, $(notdir $(PRODUCTION_ERLS:.erl=.beam)))
 
 .PHONY: doc clean clean-all
 
@@ -20,7 +23,14 @@ get-deps: $(REBAR)
 compile: get-deps
 	$(REBAR) compile
 
-check: xref
+check: xref dialyzer
+
+dialyzer: compile $(DIALYZER_PLT)
+	DIALYZER_PLT=$(DIALYZER_PLT) \
+	PRODUCTION_BEAMS="$(PRODUCTION_BEAMS)" ./dialyze.sh
+
+$(DIALYZER_PLT):
+	DIALYZER_PLT=$(DIALYZER_PLT) ./make-plt.sh
 
 xref: compile
 	$(REBAR) xref skip_deps=true

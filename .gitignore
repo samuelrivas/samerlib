@@ -10,3 +10,4 @@ doc/*.css
 rebar
 deps
 .eunit
+.dialyzer.plt
