@@ -33,7 +33,7 @@
 %% @doc removes a directory and all its contents
 -spec delete_recursive(string()) -> ok.
 delete_recursive(Dir) ->
-    os:cmd("rm -rf " ++ Dir),
+    _ = os:cmd("rm -rf " ++ Dir),
     ok.
 
 %% @doc a crashfied version of file:make_dir/1

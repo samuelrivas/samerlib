@@ -33,6 +33,12 @@
 
 -include_lib("eunit/include/eunit.hrl").
 
+%%%_* Types ============================================================
+
+%% Define the type dialyzer wants for Eunit tests. This should be really defined
+%% by Eunit, but it isn't so far
+-type eunit_test() :: {[_], {_, _, _}}.
+
 %%%_* API ==============================================================
 
 %% @doc Create clean directories to run tests that require actual files.
@@ -63,7 +69,7 @@ test_in_dir(Cleanup, Fun) ->
     Res.
 
 %% @equiv props_to_eunit(Module, 10)
--spec props_to_eunit(module()) -> [any()].
+-spec props_to_eunit(module()) -> [eunit_test()].
 props_to_eunit(Module) -> props_to_eunit(Module, 10).
 
 %% @doc Return an Eunit test that checks all properties in a module.

@@ -79,7 +79,7 @@ format_byte(Byte, LetterCase) when 0 =< Byte, 255 >= Byte ->
     lists:flatten(io_lib:format(Format, [Byte])).
 
 %% @equiv format_hex(B, upper)
--spec format_hex(binary()) -> iolist().
+-spec format_hex(binary()) -> [string()].
 format_hex(B) -> format_hex(B, upper).
 
 %% @doc Output the hexadecimal formatting of a binary
@@ -89,7 +89,7 @@ format_hex(B) -> format_hex(B, upper).
 %% > io:format("~s~n", [sel_string:format_hex(<<"Hello world">>)]).
 %%   48656C6C6F20776F726C64
 %%'''
--spec format_hex(binary(), letter_case()) -> iolist().
+-spec format_hex(binary(), letter_case()) -> [string()].
 format_hex(B, Case) ->
     [format_byte(Byte, Case) || Byte <- binary_to_list(B)].
 

@@ -79,7 +79,7 @@ take_last(N, [_|T]) -> take_last(N, T).
 %% accumulated result and the last element.
 %%
 %% `L' cannot be empty
--spec reduce(fun((A, A) -> A), L::[A]) -> A.
+-spec reduce(fun((A, A) -> A), L::[A, ...]) -> A.
 reduce(F, [H|T]) -> lists:foldl(F, H, T).
 
 %% @doc Return a copy of `L' list with the first `N' elements removed
