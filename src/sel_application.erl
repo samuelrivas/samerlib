@@ -59,12 +59,21 @@ stop_apps(Apps) ->
     lists:foreach(fun(A) -> application:stop(A) end, lists:reverse(Apps)),
     ok.
 
+%% @doc Returns the value of `Key' in the environment of `App'
+%%
+%% This functions throws an exception if `Key' is not defined
+%%
+%% @throws {env_not_found, {App::atom(), Key::any()}}
+-spec get_env(atom(), atom()) -> any().
 get_env(App, Key) ->
     case application:get_env(App, Key) of
         {ok, Val} -> Val;
         undefined -> throw({env_not_found, {App, Key}})
     end.
 
+%% @doc Returns the value of `Key' in the environment of `App' or `Default' if
+%% `Key' is not defined for App
+-spec get_env(atom(), atom(), any()) -> any().
 get_env(App, Key, Default) ->
     case application:get_env(App, Key) of
         {ok, Val} -> Val;
