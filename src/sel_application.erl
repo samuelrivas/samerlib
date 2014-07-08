@@ -34,7 +34,6 @@
 %%
 %% @throws too_much_recursion
 -spec start_app(atom()) -> [atom()].
-
 start_app(App) ->
     lists:flatten(start_app(App, 30)).
 
@@ -56,7 +55,6 @@ start_app(App, N) ->
 %%
 %% Useful to stop the applications started by {@link start_app/1}
 -spec stop_apps([atom()]) -> 'ok'.
-
 stop_apps(Apps) ->
     lists:foreach(fun(A) -> application:stop(A) end, lists:reverse(Apps)),
     ok.
