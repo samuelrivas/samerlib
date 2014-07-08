@@ -26,7 +26,7 @@
 
 -module(sel_application).
 
--export([start_app/1, stop_apps/1]).
+-export([start_app/1, stop_apps/1, get_env/2]).
 
 %% @doc Starts an application and all its dependencies.
 %%
@@ -60,3 +60,9 @@ start_app(App, N) ->
 stop_apps(Apps) ->
     lists:foreach(fun(A) -> application:stop(A) end, lists:reverse(Apps)),
     ok.
+
+get_env(App, Key) ->
+    case application:get_env(App, Key) of
+        {ok, Val} -> Val;
+        undefined -> throw({env_not_found, {App, Key}})
+    end.
