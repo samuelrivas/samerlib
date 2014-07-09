@@ -41,6 +41,43 @@ bad_arguments_test_() ->
      ?_assertError(_, sel_process:wait_exit("foo")),
      ?_assertError(_, sel_process:wait_exit({"foo", self()}))].
 
+process_name_positive_test_() ->
+    TestName = sel_process_tests_test_process,
+    {setup,
+     fun() ->
+             Pid = spawn(fun() -> named_process(TestName) end),
+             Pid
+     end,
+     fun(Pid) ->
+             exit(Pid, kill),
+             sel_process:wait_exit(Pid)
+     end,
+     fun(Pid) -> ?_assertEqual(TestName, sel_process:get_name(Pid)) end}.
+
+process_name_no_name_test_() ->
+    {setup,
+     fun() ->
+             Pid = spawn(fun() -> anonymous_process() end),
+             Pid
+     end,
+     fun(Pid) -> exit(Pid, kill) end,
+     fun(Pid) ->
+             ?_assertThrow({not_registered, Pid}, sel_process:get_name(Pid))
+     end}.
+
+process_name_negative_test_() ->
+    {setup,
+     fun() ->
+             Pid = spawn(fun() -> anonymous_process() end),
+             exit(Pid, kill),
+             sel_process:wait_exit(Pid),
+             Pid
+     end,
+     fun(Pid) ->
+             ?_assertThrow(
+                {nonexistent_process, Pid}, sel_process:get_name(Pid))
+     end}.
+
 %%%-------------------------------------------------------------------
 %%% Properties
 %%%-------------------------------------------------------------------
@@ -101,3 +138,10 @@ reason() -> {reason, proper_types:int()}.
 worker(Millisecs, Reason) ->
     timer:sleep(Millisecs),
     exit(Reason).
+
+named_process(Name) ->
+    register(Name, self()),
+    timer:sleep(infinity).
+
+anonymous_process() ->
+    timer:sleep(infinity).

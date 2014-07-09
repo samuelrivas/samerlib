@@ -26,7 +26,7 @@
 
 -module(sel_process).
 
--export([wait_exit/1, wait_exit/2]).
+-export([wait_exit/1, wait_exit/2, get_name/1]).
 
 %% @doc Wait until `Pid' exits and return its exit reason
 %%
@@ -48,6 +48,18 @@ wait_exit(Pid, Tiemout) ->
 
     receive {'DOWN', Ref, _Type, Pid, Reason} -> Reason
     after Tiemout -> throw(timeout)
+    end.
+
+%% @doc Return the registered name of `Pid'
+%%
+%% This function fails if the process is not registered or doesn't exist
+%% @throws {not_registered, pid()} | {nonexistent_process, pid()}
+-spec get_name(pid()) -> atom().
+get_name(Pid) when is_pid(Pid) ->
+    case erlang:process_info(Pid, registered_name) of
+        {registered_name, Name} -> Name;
+        []                      -> throw({not_registered, Pid});
+        undefined               -> throw({nonexistent_process, Pid})
     end.
 
 %% Milliseconds
