@@ -26,7 +26,7 @@
 
 -module(sel_process).
 
--export([wait_exit/1, wait_exit/2, get_name/1]).
+-export([wait_exit/1, wait_exit/2, get_name/1, get_pid/1]).
 
 %% @doc Wait until `Pid' exits and return its exit reason
 %%
@@ -60,6 +60,17 @@ get_name(Pid) when is_pid(Pid) ->
         {registered_name, Name} -> Name;
         []                      -> throw({not_registered, Pid});
         undefined               -> throw({nonexistent_process, Pid})
+    end.
+
+%% @doc Return the pid associated to a registered name
+%%
+%% This function fails if no pid is registered with the provided name
+%% @throws {invalid_process_name, atom()}
+-spec get_pid(atom()) -> pid().
+get_pid(Name) when is_atom(Name) ->
+    case whereis(Name) of
+        undefined -> throw({invalid_process_name, Name});
+        Pid       -> Pid
     end.
 
 %% Milliseconds

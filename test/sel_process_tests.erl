@@ -60,6 +60,16 @@ get_name_negative_test_() ->
                  {nonexistent_process, Pid}, sel_process:get_name(Pid))
       end).
 
+get_pid_positive_test_() ->
+    named_process_template(
+      fun(Pid, TestName) ->
+              ?_assertEqual(Pid, sel_process:get_pid(TestName))
+      end).
+
+get_pid_negative_test_() ->
+    Name = test_process_name(),
+    ?_assertThrow({invalid_process_name, Name}, sel_process:get_pid(Name)).
+
 %%%-------------------------------------------------------------------
 %%% Properties
 %%%-------------------------------------------------------------------
@@ -113,7 +123,7 @@ prop_no_proc() ->
 %%%-------------------------------------------------------------------
 
 named_process_template(TestFun) ->
-    TestName = sel_process_tests_test_process,
+    TestName = test_process_name(),
     {setup,
      fun() ->
              spawn(fun() -> named_process(TestName) end)
@@ -161,3 +171,8 @@ named_process(Name) ->
 
 anonymous_process() ->
     timer:sleep(infinity).
+
+%% Let's hope no one is stupid enough to create a process with this name in the
+%% enviroment that runs the tests...
+test_process_name() ->
+    sel_process_tests_test_process.
