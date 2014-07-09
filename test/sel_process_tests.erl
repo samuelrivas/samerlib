@@ -41,19 +41,19 @@ bad_arguments_test_() ->
      ?_assertError(_, sel_process:wait_exit("foo")),
      ?_assertError(_, sel_process:wait_exit({"foo", self()}))].
 
-process_name_positive_test_() ->
+get_name_positive_test_() ->
     named_process_template(
       fun(Pid, TestName) ->
               ?_assertEqual(TestName, sel_process:get_name(Pid))
       end).
 
-process_name_no_name_test_() ->
+get_name_no_name_test_() ->
     anonymous_process_template(
       fun(Pid) ->
               ?_assertThrow({not_registered, Pid}, sel_process:get_name(Pid))
       end).
 
-process_name_negative_test_() ->
+get_name_negative_test_() ->
     dead_process_template(
       fun(Pid) ->
               ?_assertThrow(
