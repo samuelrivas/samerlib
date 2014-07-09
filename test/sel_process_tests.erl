@@ -42,41 +42,23 @@ bad_arguments_test_() ->
      ?_assertError(_, sel_process:wait_exit({"foo", self()}))].
 
 process_name_positive_test_() ->
-    TestName = sel_process_tests_test_process,
-    {setup,
-     fun() ->
-             Pid = spawn(fun() -> named_process(TestName) end),
-             Pid
-     end,
-     fun(Pid) ->
-             exit(Pid, kill),
-             sel_process:wait_exit(Pid)
-     end,
-     fun(Pid) -> ?_assertEqual(TestName, sel_process:get_name(Pid)) end}.
+    named_process_template(
+      fun(Pid, TestName) ->
+              ?_assertEqual(TestName, sel_process:get_name(Pid))
+      end).
 
 process_name_no_name_test_() ->
-    {setup,
-     fun() ->
-             Pid = spawn(fun() -> anonymous_process() end),
-             Pid
-     end,
-     fun(Pid) -> exit(Pid, kill) end,
-     fun(Pid) ->
-             ?_assertThrow({not_registered, Pid}, sel_process:get_name(Pid))
-     end}.
+    anonymous_process_template(
+      fun(Pid) ->
+              ?_assertThrow({not_registered, Pid}, sel_process:get_name(Pid))
+      end).
 
 process_name_negative_test_() ->
-    {setup,
-     fun() ->
-             Pid = spawn(fun() -> anonymous_process() end),
-             exit(Pid, kill),
-             sel_process:wait_exit(Pid),
-             Pid
-     end,
-     fun(Pid) ->
-             ?_assertThrow(
-                {nonexistent_process, Pid}, sel_process:get_name(Pid))
-     end}.
+    dead_process_template(
+      fun(Pid) ->
+              ?_assertThrow(
+                 {nonexistent_process, Pid}, sel_process:get_name(Pid))
+      end).
 
 %%%-------------------------------------------------------------------
 %%% Properties
@@ -125,6 +107,40 @@ prop_no_proc() ->
                   exit(Pid, kill)
               end
           end)).
+
+%%%-------------------------------------------------------------------
+%%% Eunit test templates
+%%%-------------------------------------------------------------------
+
+named_process_template(TestFun) ->
+    TestName = sel_process_tests_test_process,
+    {setup,
+     fun() ->
+             spawn(fun() -> named_process(TestName) end)
+     end,
+     fun(Pid) ->
+             exit(Pid, kill),
+             sel_process:wait_exit(Pid)
+     end,
+     fun(Pid) -> TestFun(Pid, TestName) end}.
+
+anonymous_process_template(TestFun) ->
+    {setup,
+     fun() ->
+             spawn(fun() -> anonymous_process() end)
+     end,
+     fun(Pid) -> exit(Pid, kill) end,
+     fun(Pid) -> TestFun(Pid) end}.
+
+dead_process_template(TestFun) ->
+    {setup,
+     fun() ->
+             Pid = spawn(fun() -> anonymous_process() end),
+             exit(Pid, kill),
+             sel_process:wait_exit(Pid),
+             Pid
+     end,
+     fun(Pid) -> TestFun(Pid) end}.
 
 %%%-------------------------------------------------------------------
 %%% Internal functions
