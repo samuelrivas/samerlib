@@ -115,7 +115,7 @@ random_dir_name() ->
     "sel_test_temp-" ++ [random_letter() || _ <- lists:seq(1, 10)].
 
 random_letter() ->
-    random:uniform($z - $a) + $a - 1.
+    rand:uniform($z - $a) + $a - 1.
 
 base_test_dir() -> "/tmp".
 
